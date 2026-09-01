@@ -40,7 +40,7 @@
       user-select: none;
     }
 
-    /* FIX CỨNG KÍCH THƯỚC ALL SVG TOÀN BỘ APP - TRÁNH OVERLOAD PHÌNH TO */
+    /* FIX CỨNG KÍCH THƯỚC ALL SVG TOÀN BỘ APP */
     svg {
       max-width: 100%;
       max-height: 100%;
@@ -132,7 +132,6 @@
     .tool-item:hover, .tool-item.active { background: var(--bg-card); color: #fff; }
     .tool-item-left { display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1; }
     
-    /* ÉP KHUÔN ICON TRONG SIDEBAR */
     .tool-item-icon {
       width: 20px;
       height: 20px;
@@ -142,6 +141,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      color: var(--tool-color, var(--accent));
     }
     .tool-item-icon svg {
       width: 20px !important;
@@ -252,7 +252,7 @@
     .btn-logout { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; font-size: 14px; }
     .btn-logout:hover { color: #ff5555; }
 
-    /* TAB BAR & STYLING NỔI BẬT CÓ MÀU ĐỊNH DANH CÁCH XA NHAU */
+    /* TAB BAR */
     .tab-bar { 
       height: 42px; 
       background: #0d0e1a; 
@@ -282,7 +282,6 @@
       transition: all 0.2s ease;
     }
 
-    /* Đường màu định danh nổi bật phía trên Tab */
     .tab::before {
       content: '';
       position: absolute;
@@ -315,7 +314,6 @@
       box-shadow: 0 0 8px var(--tab-color);
     }
 
-    /* ÉP KHUÔN ICON TRÊN TAB */
     .tab-icon {
       width: 16px;
       height: 16px;
@@ -352,7 +350,7 @@
     .tab-frame { width: 100%; height: 100%; border: none; position: absolute; inset: 0; display: none; }
     .tab-frame.active { display: block; }
 
-    /* LAUNCHPAD CARD ICON FIX */
+    /* DYNAMIC NEON CARD SYSTEM */
     .launchpad { 
       display: grid; 
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
@@ -364,7 +362,7 @@
     
     .card { 
       background: var(--bg-card); 
-      border: 1px solid var(--border-color); 
+      border: 1px solid rgba(255, 255, 255, 0.08); 
       border-radius: 14px; 
       aspect-ratio: 1 / 1; 
       padding: 16px; 
@@ -374,37 +372,55 @@
       justify-content: center; 
       text-align: center; 
       cursor: pointer; 
-      transition: all 0.2s ease; 
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
       position: relative; 
     }
-    .card:hover { background: var(--bg-card-hover); transform: translateY(-3px); border-color: var(--accent); }
     
     .card-icon { 
       width: 48px; 
       height: 48px; 
-      background: rgba(255,255,255,0.05); 
       border-radius: 12px; 
+      background: var(--accent-bg, rgba(255, 255, 255, 0.05)); 
+      color: var(--accent-color, var(--accent)); 
       display: flex; 
       align-items: center; 
       justify-content: center; 
       margin-bottom: 12px; 
-      color: var(--accent); 
       flex-shrink: 0;
+      border: 1px solid var(--accent-bg, transparent);
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px -2px var(--accent-bg, transparent);
     }
     .card-icon svg { 
-      width: 28px !important; 
-      height: 28px !important; 
-      max-width: 28px !important;
-      max-height: 28px !important;
+      width: 26px !important; 
+      height: 26px !important; 
+      max-width: 26px !important;
+      max-height: 26px !important;
+      stroke: currentColor;
+      fill: none;
     }
 
     .card-title { font-size: 13.5px; font-weight: 700; color: #fff; margin-bottom: 4px; }
     .card-desc { font-size: 11px; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     
+    /* HOVER EFFECT: GLOW NEON CHUẨN ĐỊNH DANH TOOL */
+    .card:hover { 
+      background: var(--bg-card-hover); 
+      transform: translateY(-4px); 
+      border-color: var(--accent-color, var(--accent)) !important;
+      box-shadow: 0 0 18px var(--accent-glow, rgba(97, 97, 255, 0.3)), inset 0 0 8px var(--accent-bg, transparent);
+    }
+
+    .card:hover .card-icon {
+      background: var(--accent-color, var(--accent));
+      color: #ffffff;
+      box-shadow: 0 0 14px var(--accent-color, var(--accent));
+    }
+
     .card-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
     .card:hover .card-actions { opacity: 1; }
-    .card-action-btn { background: rgba(0,0,0,0.5); border: none; color: var(--text-muted); width: 24px; height: 24px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; }
-    .card-action-btn:hover { background: var(--accent); color: #fff; }
+    .card-action-btn { background: rgba(0,0,0,0.6); border: none; color: var(--text-muted); width: 24px; height: 24px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+    .card-action-btn:hover { background: var(--accent-color, var(--accent)); color: #fff; }
 
     /* MODALS */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); z-index: 1000; }
@@ -495,45 +511,21 @@
     .toast.error { border-color: var(--danger); }
     .toast.warning { border-color: #faad14; }
 
+    /* RESPONSIVE MOBILE FIX */
     @media (max-width: 640px) {
       .user-info { display: none; }
       .search-box { max-width: 100%; }
-    }
-    /* ==========================================
-   RESPONSIVE MOBILE OPTIMIZATION FOR CARDS
-   ========================================== */
-    @media (max-width: 640px) {
       .launchpad {
-        /* Chuyển sang 2 cột đều nhau hoặc 1 cột dạng danh sách trên mobile */
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
         gap: 10px;
         padding: 12px;
       }
-    
       .card {
-        aspect-ratio: auto; /* Bỏ vuông cứng để không chiếm quá nhiều chiều cao */
-        padding: 12px 8px;
+        aspect-ratio: auto;
         min-height: 110px;
+        padding: 12px 8px;
       }
-    
-      .card-icon {
-        width: 36px;
-        height: 36px;
-        margin-bottom: 6px;
-      }
-    
-      .card-icon svg {
-        width: 20px !important;
-        height: 20px !important;
-      }
-    
-      .card-title {
-        font-size: 12px;
-      }
-    
-      .card-desc {
-        display: none; /* Ẩn mô tả dài trên mobile để UI gọn gàng */
-      }
+      .card-desc { display: none; }
     }
   </style>
 </head>
@@ -696,32 +688,21 @@
     let monacoEditorInstance = null;
     let pendingDeleteAction = null;
 
-    // BẢNG MÀU ĐỊNH DANH TƯƠNG PHẢN NỔI BẬT NỐI TIẾP
-    const VIBRANT_PALETTE = [
-      "#38ef7d", // Green Emerald (Excel Booster)
-      "#ff4b1f", // Coral Red/Orange (PCN Matrix)
-      "#00c6ff", // Bright Cyan
-      "#ff007f", // Neon Pink
-      "#f8002f", // Crimson
-      "#7f00ff", // Deep Purple
-      "#ffb347", // Pastel Orange
-      "#00f2fe", // Electric Blue
-      "#f12711"  // Sunset Red
-    ];
-
-    const toolColorMap = {};
-    let colorIndex = 0;
-
-    // HÀM GÁN MÀU CÁCH XA NHAU NỔI BẬT
-    function getToolColor(toolId) {
-      if (toolColorMap[toolId]) return toolColorMap[toolId];
-      const assignedColor = VIBRANT_PALETTE[colorIndex % VIBRANT_PALETTE.length];
-      colorIndex++;
-      toolColorMap[toolId] = assignedColor;
-      return assignedColor;
+    // ALGORITHM: TỰ ĐỘNG BĂM TÊN TOOL SANG GÓC MÀU HSL NEON ĐỘC BẢN
+    function getToolTheme(title = '') {
+      let hash = 0;
+      for (let i = 0; i < title.length; i++) {
+        hash = title.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const hue = Math.abs(hash) % 360;
+      return {
+        color: `hsl(${hue}, 85%, 60%)`,
+        bg: `hsla(${hue}, 85%, 60%, 0.15)`,
+        glow: `hsla(${hue}, 85%, 60%, 0.4)`
+      };
     }
 
-    // --- TOAST NOTIFICATION SYSTEM ---
+    // TOAST NOTIFICATION SYSTEM
     function showToast(message, type = 'success') {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
@@ -738,7 +719,7 @@
       }, 3000);
     }
 
-    // --- SIDEBAR RESIZE & TOGGLE (THIẾT LẬP LẠI MƯỢT MÀ KHÔNG DÍNH CHUỘT) ---
+    // SIDEBAR RESIZE & TOGGLE
     function toggleSidebar() {
       document.getElementById('appSidebar').classList.toggle('collapsed');
     }
@@ -775,7 +756,7 @@
       }
     });
 
-    // --- AUTH STATE ---
+    // AUTH STATE
     let currentUser = JSON.parse(localStorage.getItem('studio_user')) || {
       name: 'Guest Viewer',
       email: 'viewer@studiohub.local',
@@ -847,7 +828,7 @@
       showToast('Đã đăng xuất khỏi quyền Admin', 'warning');
     }
 
-    // --- MONACO EDITOR ---
+    // MONACO EDITOR
     require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39.0/min/vs' }});
     require(['vs/editor/editor.main'], function() {
       monacoEditorInstance = monaco.editor.create(document.getElementById('monacoHost'), {
@@ -881,41 +862,48 @@
       }
     }
 
-    // --- RENDER UI (BỌC KHUÔN CỐ ĐỊNH ICON THÀNH CÔNG) ---
+    // RENDER UI: GÁN MÀU DYNAMIC DỰA TRÊN COLOR HASHING
     function renderUI() {
       const defaultSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>`;
       const isAdmin = currentUser.role === 'admin';
 
       // Launchpad Cards
-      document.getElementById('launchpad').innerHTML = tools.map(tool => `
-        <div class="card" onclick="runTool('${tool.id}')">
-          ${isAdmin ? `
-            <div class="card-actions">
-              <button class="card-action-btn" onclick="event.stopPropagation(); editTool('${tool.id}')" title="Edit Tool">✏️</button>
-              <button class="card-action-btn" onclick="event.stopPropagation(); triggerDeleteTool('${tool.id}', '${tool.title}')" title="Delete Tool">🗑️</button>
-            </div>
-          ` : ''}
-          <div class="card-icon">${tool.icon_svg || defaultSvg}</div>
-          <div class="card-title">${tool.title}</div>
-          <div class="card-desc">${tool.desc || ''}</div>
-        </div>
-      `).join('');
-
-      // Sidebar List (Bọc class .tool-item-icon)
-      document.getElementById('sidebarList').innerHTML = tools.map(tool => `
-        <div class="tool-item" onclick="runTool('${tool.id}')">
-          <div class="tool-item-left">
-            <div class="tool-item-icon">${tool.icon_svg || defaultSvg}</div>
-            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${tool.title}</span>
+      document.getElementById('launchpad').innerHTML = tools.map(tool => {
+        const theme = getToolTheme(tool.title);
+        return `
+          <div class="card" onclick="runTool('${tool.id}')" 
+               style="--accent-color: ${theme.color}; --accent-bg: ${theme.bg}; --accent-glow: ${theme.glow};">
+            ${isAdmin ? `
+              <div class="card-actions">
+                <button class="card-action-btn" onclick="event.stopPropagation(); editTool('${tool.id}')" title="Edit Tool">✏️</button>
+                <button class="card-action-btn" onclick="event.stopPropagation(); triggerDeleteTool('${tool.id}', '${tool.title}')" title="Delete Tool">🗑️</button>
+              </div>
+            ` : ''}
+            <div class="card-icon">${tool.icon_svg || defaultSvg}</div>
+            <div class="card-title">${tool.title}</div>
+            <div class="card-desc">${tool.desc || ''}</div>
           </div>
-          ${isAdmin ? `
-            <div class="tool-item-actions">
-              <button class="tool-action-btn" onclick="event.stopPropagation(); editTool('${tool.id}')" title="Edit">✏️</button>
-              <button class="tool-action-btn" onclick="event.stopPropagation(); triggerDeleteTool('${tool.id}', '${tool.title}')" title="Delete">🗑️</button>
+        `;
+      }).join('');
+
+      // Sidebar List
+      document.getElementById('sidebarList').innerHTML = tools.map(tool => {
+        const theme = getToolTheme(tool.title);
+        return `
+          <div class="tool-item" onclick="runTool('${tool.id}')">
+            <div class="tool-item-left">
+              <div class="tool-item-icon" style="--tool-color: ${theme.color}">${tool.icon_svg || defaultSvg}</div>
+              <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${tool.title}</span>
             </div>
-          ` : ''}
-        </div>
-      `).join('');
+            ${isAdmin ? `
+              <div class="tool-item-actions">
+                <button class="tool-action-btn" onclick="event.stopPropagation(); editTool('${tool.id}')" title="Edit">✏️</button>
+                <button class="tool-action-btn" onclick="event.stopPropagation(); triggerDeleteTool('${tool.id}', '${tool.title}')" title="Delete">🗑️</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
     }
 
     function filterTools() {
@@ -930,7 +918,7 @@
       });
     }
 
-    // RUN TOOL: TỰ ĐỘNG TRÍCH XUẤT TITLE VÀ ICON HIỂN THỊ LÊN TAB
+    // RUN TOOL: TAB SẼ NHẬN MÀU THEO COLOR HASHING CỦA TOOL
     async function runTool(id) {
       let tool = tools.find(t => t.id === id);
       if (!tool.code_content) {
@@ -938,24 +926,22 @@
         tool = await res.json();
       }
 
-      // TRÍCH XUẤT ICON VÀ TITLE CHUẨN TỪ HTML NẾU CÓ
       let iconSvg = tool.icon_svg || `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>`;
       let toolTitle = tool.title || "Tool Workspace";
 
+      const theme = getToolTheme(toolTitle);
       const blobUrl = URL.createObjectURL(new Blob([tool.code_content], { type: 'text/html' }));
       const tabId = 'tab_' + id + '_' + Date.now();
-      const tabColor = getToolColor(id);
       
       const newTabObj = { 
         tabId, 
         toolId: id, 
         title: toolTitle, 
         iconSvg: iconSvg,
-        color: tabColor,
+        color: theme.color,
         blobUrl 
       };
 
-      // Xếp Tab kế bên cùng loại nếu đã mở
       let lastSameIndex = -1;
       for (let i = openTabs.length - 1; i >= 0; i--) {
         if (openTabs[i].toolId === id) {
@@ -1006,7 +992,7 @@
       else { document.getElementById('launchpad').style.display = 'grid'; renderTabs(); }
     }
 
-    // --- DELETE MODAL ---
+    // DELETE MODAL
     function triggerDeleteTool(id, title) {
       if (currentUser.role !== 'admin') { showToast('Bạn không có quyền Admin!', 'error'); return; }
       pendingDeleteAction = { type: 'tool', id };
@@ -1054,7 +1040,7 @@
       closeDeleteModal();
     }
 
-    // --- EDITOR ACTIONS ---
+    // EDITOR ACTIONS
     function openEditor() {
       if (currentUser.role !== 'admin') { showToast('Access Denied!', 'error'); return; }
       document.getElementById('editToolId').value = '';
@@ -1098,7 +1084,7 @@
       loadToolsFromD1();
     }
 
-    // --- ICON PICKER & MANAGER ---
+    // ICON PICKER & MANAGER
     function renderIconPicker(iconList) {
       const grid = document.getElementById('iconPickerGrid');
       if (!iconList || iconList.length === 0) {
