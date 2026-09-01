@@ -4,8 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developer Studio Hub</title>
-  
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.39.0/min/vs/editor/vscode-loader.min.css" />
+
+  <!-- FAVICON DATA URI -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236161ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 2 7 12 12 22 7 12 2'/><polyline points='2 17 12 22 22 17'/><polyline points='2 12 12 17 22 12'/></svg>" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.39.0/min/vs/editor/vscode-loader.min.css" />
   <style>
     :root {
       --bg-main: #111322;
@@ -14,6 +17,9 @@
       --bg-card-hover: #2c305e;
       --accent: #6161ff;
       --accent-hover: #4b4bdf;
+      --danger: #ff4d4f;
+      --danger-hover: #d9363e;
+      --success: #52c41a;
       --text-main: #ffffff;
       --text-muted: #9699b0;
       --border-color: #2d3159;
@@ -33,9 +39,11 @@
       overflow: hidden;
     }
 
-    /* SIDEBAR */
+    /* SIDEBAR & RESIZER (RESPONSIVE & RESIZABLE) */
     .sidebar {
       width: var(--sidebar-width);
+      min-width: 180px;
+      max-width: 450px;
       background: var(--bg-sidebar);
       border-right: 1px solid var(--border-color);
       display: flex;
@@ -43,6 +51,27 @@
       padding: 16px 12px;
       z-index: 10;
       flex-shrink: 0;
+      position: relative;
+      transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar.collapsed {
+      margin-left: calc(var(--sidebar-width) * -1);
+    }
+
+    /* Resizer Line */
+    .sidebar-resizer {
+      position: absolute;
+      top: 0;
+      right: -3px;
+      width: 6px;
+      height: 100%;
+      cursor: col-resize;
+      z-index: 15;
+      transition: background 0.2s;
+    }
+    .sidebar-resizer:hover, .sidebar-resizer.is-resizing {
+      background: var(--accent);
     }
 
     .brand {
@@ -54,6 +83,19 @@
       padding: 8px;
       margin-bottom: 20px;
       color: #fff;
+    }
+
+    .brand-logo {
+      width: 28px;
+      height: 28px;
+      background: rgba(97, 97, 255, 0.15);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      flex-shrink: 0;
     }
 
     .nav-section {
@@ -105,6 +147,9 @@
     .btn-action:hover { background: var(--accent-hover); }
     .btn-secondary { background: var(--bg-card); border: 1px solid var(--border-color); }
     .btn-secondary:hover { background: var(--bg-card-hover); }
+    .btn-danger { background: var(--danger); }
+    .btn-danger:hover { background: var(--danger-hover); }
+    .btn-danger:disabled { opacity: 0.4; cursor: not-allowed; background: var(--bg-card); }
 
     /* WORKSPACE & TOP BAR */
     .main-workspace { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -115,10 +160,25 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 24px;
+      padding: 0 20px;
       background: var(--bg-main);
       gap: 16px;
     }
+
+    .sidebar-toggle-btn {
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sidebar-toggle-btn:hover { color: #fff; border-color: var(--accent); background: var(--bg-card); }
 
     .search-box {
       display: flex;
@@ -133,7 +193,7 @@
     }
     .search-box input { background: transparent; border: none; color: #fff; outline: none; font-size: 13px; width: 100%; }
 
-    /* AUTH WIDGET IN HEADER */
+    /* AUTH WIDGET */
     .auth-widget { display: flex; align-items: center; gap: 10px; }
     .btn-auth {
       display: flex;
@@ -240,6 +300,39 @@
     }
     .lib-icon-card:hover .lib-icon-del { display: flex; }
 
+    /* TOAST NOTIFICATIONS */
+    #toastContainer {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      min-width: 250px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateX(120%);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .toast.show { transform: translateX(0); }
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--danger); }
+    .toast.warning { border-color: #faad14; }
+
     @media (max-width: 640px) {
       .user-info { display: none; }
       .search-box { max-width: 100%; }
@@ -248,10 +341,18 @@
 </head>
 <body>
 
+  <!-- TOAST CONTAINER -->
+  <div id="toastContainer"></div>
+
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="appSidebar">
+    <!-- ResizerHandle -->
+    <div class="sidebar-resizer" id="sidebarResizer"></div>
+
     <div class="brand">
-      <svg class="icon-svg" style="color: var(--accent)" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+      <div class="brand-logo">
+        <svg class="icon-svg" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+      </div>
       Studio Hub
     </div>
 
@@ -275,6 +376,10 @@
   <!-- WORKSPACE -->
   <main class="main-workspace">
     <div class="top-bar">
+      <button class="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar (Ctrl+B)">
+        <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+
       <div class="search-box">
         <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="searchInput" placeholder="Search workspace tools..." oninput="filterTools()" />
@@ -290,6 +395,23 @@
       <div class="launchpad" id="launchpad"></div>
     </div>
   </main>
+
+  <!-- CONFIRM DELETE DANGER MODAL -->
+  <div class="modal" id="confirmDeleteModal">
+    <div class="modal-content" style="width: 380px; padding: 24px; border: 1px solid var(--danger);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; color:var(--danger);">
+        <svg class="icon-svg" style="width:28px; height:28px;" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <h3 style="margin:0; font-size:16px;">XÁC NHẬN XÓA DỮ LIỆU</h3>
+      </div>
+      <p id="deleteModalMsg" style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;"></p>
+      <p style="font-size: 12px; font-weight: 600; color: #fff; margin-bottom: 8px;">Nhập chữ <span style="color:var(--danger)">OKIE</span> để tiếp tục:</p>
+      <input type="text" id="deleteConfirmInput" class="form-input" placeholder="Gõ OKIE..." style="margin-bottom: 16px; text-transform: uppercase;" oninput="validateDeleteInput()" />
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn-action btn-secondary" onclick="closeDeleteModal()" style="margin:0; padding:8px 14px; font-size:12px;">Hủy bỏ</button>
+        <button id="btnConfirmDeleteExecute" class="btn-action btn-danger" disabled onclick="executeDeleteAction()" style="margin:0; padding:8px 14px; font-size:12px;">Xóa Vĩnh Viễn</button>
+      </div>
+    </div>
+  </div>
 
   <!-- PASSKEY MODAL -->
   <div class="modal" id="passkeyModal">
@@ -368,7 +490,7 @@
     </div>
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.39.0/min/vs/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.39.0/min/vs/loader.js"></script>
   <script>
     const ADMIN_PASSKEY = "admin123";
     let tools = [];
@@ -376,6 +498,63 @@
     let openTabs = [];
     let activeTabId = null;
     let monacoEditorInstance = null;
+    let pendingDeleteAction = null;
+
+    // --- TOAST NOTIFICATION SYSTEM ---
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      
+      const iconMap = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️'
+      };
+
+      toast.innerHTML = `<span>${iconMap[type] || 'ℹ️'}</span><span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // --- SIDEBAR RESIZE & TOGGLE ---
+    function toggleSidebar() {
+      document.getElementById('appSidebar').classList.toggle('collapsed');
+    }
+
+    const sidebar = document.getElementById('appSidebar');
+    const resizer = document.getElementById('sidebarResizer');
+    let isResizing = false;
+
+    resizer.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      resizer.classList.add('is-resizing');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isResizing) return;
+      let newWidth = e.clientX;
+      if (newWidth < 180) newWidth = 180;
+      if (newWidth > 450) newWidth = 450;
+      sidebar.style.width = newWidth + 'px';
+      document.documentElement.style.setProperty('--sidebar-width', newWidth + 'px');
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isResizing) {
+        isResizing = false;
+        resizer.classList.remove('is-resizing');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      }
+    });
 
     // --- AUTH STATE ---
     let currentUser = JSON.parse(localStorage.getItem('studio_user')) || {
@@ -406,7 +585,7 @@
           <button class="btn-auth btn-passkey" onclick="openPasskeyModal()">
             <span>🔑 Passkey Admin</span>
           </button>
-          <button class="btn-auth" onclick="alert('Tính năng Gmail Login đang chờ cấu hình OAuth Client ID!')">
+          <button class="btn-auth" onclick="showToast('Tính năng OAuth Gmail đang chờ cấu hình Client ID', 'warning')">
             <svg style="width:13px; height:13px;" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
               <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.23v3.14C3.2 21.3 7.31 24 12 24z"/>
@@ -436,8 +615,9 @@
         localStorage.setItem('studio_user', JSON.stringify(currentUser));
         closePasskeyModal();
         updateAuthUI();
+        showToast('Đã kích hoạt quyền Admin thành công!', 'success');
       } else {
-        alert('Passkey không đúng!');
+        showToast('Passkey không đúng!', 'error');
       }
     }
 
@@ -445,10 +625,11 @@
       currentUser = { name: 'Guest Viewer', email: 'viewer@studiohub.local', role: 'viewer' };
       localStorage.setItem('studio_user', JSON.stringify(currentUser));
       updateAuthUI();
+      showToast('Đã đăng xuất khỏi quyền Admin', 'warning');
     }
 
     // --- MONACO EDITOR INIT ---
-require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39.0/min/vs' }});
+    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39.0/min/vs' }});
     require(['vs/editor/editor.main'], function() {
       monacoEditorInstance = monaco.editor.create(document.getElementById('monacoHost'), {
         value: '<!-- Write HTML/JS code here -->',
@@ -459,17 +640,26 @@ require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39
     async function loadIconsFromD1() {
       try {
         const res = await fetch('/api/icons');
-        dbIcons = await res.json();
-        renderIconPicker(dbIcons);
-      } catch (err) {}
+        if (res.ok) {
+          dbIcons = await res.json();
+          renderIconPicker(dbIcons);
+          renderLibIcons(dbIcons);
+        }
+      } catch (err) {
+        showToast('Lỗi khi tải Icon từ D1 Database', 'error');
+      }
     }
 
     async function loadToolsFromD1() {
       try {
         const res = await fetch('/api/tools');
-        tools = await res.json();
-        renderUI();
-      } catch (err) {}
+        if (res.ok) {
+          tools = await res.json();
+          renderUI();
+        }
+      } catch (err) {
+        showToast('Lỗi khi tải Tools từ D1 Database', 'error');
+      }
     }
 
     // --- RENDER UI ---
@@ -483,7 +673,7 @@ require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39
           ${isAdmin ? `
             <div class="card-actions">
               <button class="card-action-btn" onclick="event.stopPropagation(); editTool('${tool.id}')" title="Edit Tool">✏️</button>
-              <button class="card-action-btn" onclick="event.stopPropagation(); deleteTool('${tool.id}')" title="Delete Tool">🗑️</button>
+              <button class="card-action-btn" onclick="event.stopPropagation(); triggerDeleteTool('${tool.id}', '${tool.title}')" title="Delete Tool">🗑️</button>
             </div>
           ` : ''}
           <div class="card-icon">${tool.icon_svg || defaultSvg}</div>
@@ -502,7 +692,7 @@ require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39
           ${isAdmin ? `
             <div class="tool-item-actions">
               <button class="tool-action-btn" onclick="event.stopPropagation(); editTool('${tool.id}')" title="Edit">✏️</button>
-              <button class="tool-action-btn" onclick="event.stopPropagation(); deleteTool('${tool.id}')" title="Delete">🗑️</button>
+              <button class="tool-action-btn" onclick="event.stopPropagation(); triggerDeleteTool('${tool.id}', '${tool.title}')" title="Delete">🗑️</button>
             </div>
           ` : ''}
         </div>
@@ -564,9 +754,57 @@ require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39
       else { document.getElementById('launchpad').style.display = 'grid'; renderTabs(); }
     }
 
+    // --- STRONG CONFIRM DELETE MODAL ---
+    function triggerDeleteTool(id, title) {
+      if (currentUser.role !== 'admin') { showToast('Bạn không có quyền Admin!', 'error'); return; }
+      pendingDeleteAction = { type: 'tool', id };
+      document.getElementById('deleteModalMsg').innerText = `Hành động này sẽ xóa vĩnh viễn Tool "${title}" khỏi D1 Database và không thể phục hồi.`;
+      openDeleteModal();
+    }
+
+    function triggerDeleteIcon(id, name) {
+      if (currentUser.role !== 'admin') { showToast('Bạn không có quyền Admin!', 'error'); return; }
+      pendingDeleteAction = { type: 'icon', id };
+      document.getElementById('deleteModalMsg').innerText = `Hành động này sẽ xóa vĩnh viễn Icon "${name}" khỏi D1 Database.`;
+      openDeleteModal();
+    }
+
+    function openDeleteModal() {
+      document.getElementById('deleteConfirmInput').value = '';
+      document.getElementById('btnConfirmDeleteExecute').disabled = true;
+      document.getElementById('confirmDeleteModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('confirmDeleteModal').classList.remove('active');
+      pendingDeleteAction = null;
+    }
+
+    function validateDeleteInput() {
+      const val = document.getElementById('deleteConfirmInput').value.trim().toUpperCase();
+      document.getElementById('btnConfirmDeleteExecute').disabled = (val !== 'OKIE');
+    }
+
+    async function executeDeleteAction() {
+      if (!pendingDeleteAction) return;
+      const { type, id } = pendingDeleteAction;
+
+      if (type === 'tool') {
+        await fetch(`/api/tools?id=${id}`, { method: 'DELETE' });
+        showToast('Đã xóa Tool thành công!', 'success');
+        loadToolsFromD1();
+      } else if (type === 'icon') {
+        await fetch(`/api/icons?id=${id}`, { method: 'DELETE' });
+        showToast('Đã xóa Icon khỏi Library!', 'success');
+        await loadIconsFromD1();
+      }
+
+      closeDeleteModal();
+    }
+
     // --- CRUD ACTIONS ---
     function openEditor() {
-      if (currentUser.role !== 'admin') { alert('Access Denied!'); return; }
+      if (currentUser.role !== 'admin') { showToast('Access Denied!', 'error'); return; }
       document.getElementById('editToolId').value = '';
       document.getElementById('editTitle').value = '';
       document.getElementById('editDesc').value = '';
@@ -576,7 +814,7 @@ require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39
     }
 
     async function editTool(id) {
-      if (currentUser.role !== 'admin') { alert('Access Denied!'); return; }
+      if (currentUser.role !== 'admin') { showToast('Access Denied!', 'error'); return; }
       const res = await fetch(`/api/tools?id=${id}`);
       const tool = await res.json();
       document.getElementById('editToolId').value = tool.id;
@@ -585,13 +823,6 @@ require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39
       document.getElementById('editIconSvg').value = tool.icon_svg || '';
       if(monacoEditorInstance) monacoEditorInstance.setValue(tool.code_content || '');
       document.getElementById('editorModal').classList.add('active');
-    }
-
-    async function deleteTool(id) {
-      if (currentUser.role !== 'admin') { alert('Access Denied!'); return; }
-      if (!confirm('Are you sure you want to delete this tool?')) return;
-      await fetch(`/api/tools?id=${id}`, { method: 'DELETE' });
-      loadToolsFromD1();
     }
 
     function closeEditor() { document.getElementById('editorModal').classList.remove('active'); }
@@ -611,12 +842,17 @@ require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39
         body: JSON.stringify(payload)
       });
       closeEditor();
+      showToast('Đã lưu Tool vào D1 Database thành công!', 'success');
       loadToolsFromD1();
     }
 
     // --- ICON PICKER & MANAGER ---
     function renderIconPicker(iconList) {
       const grid = document.getElementById('iconPickerGrid');
+      if (!iconList || iconList.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--text-muted); font-size:11px; padding:8px;">No icons in DB</div>`;
+        return;
+      }
       grid.innerHTML = iconList.map(icon => `
         <div class="icon-picker-item" title="${icon.name} (${icon.tags || ''})" onclick="selectD1Icon('${icon.id}')">
           ${icon.svg_code}
@@ -632,7 +868,10 @@ require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39
 
     function selectD1Icon(iconId) {
       const icon = dbIcons.find(i => i.id === iconId);
-      if (icon) document.getElementById('editIconSvg').value = icon.svg_code;
+      if (icon) {
+        document.getElementById('editIconSvg').value = icon.svg_code;
+        showToast(`Đã chọn icon: ${icon.name}`, 'success');
+      }
     }
 
     function openIconManager() {
@@ -672,7 +911,7 @@ require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39
       }
       grid.innerHTML = list.map(icon => `
         <div class="lib-icon-card" title="${icon.name} (${icon.tags || ''})">
-          <button class="lib-icon-del" onclick="deleteIconFromD1('${icon.id}')" title="Delete Icon">✕</button>
+          <button class="lib-icon-del" onclick="triggerDeleteIcon('${icon.id}', '${icon.name}')" title="Delete Icon">✕</button>
           ${icon.svg_code}
           <span class="lib-icon-name">${icon.name}</span>
         </div>
@@ -685,26 +924,22 @@ require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39
       renderLibIcons(filtered);
     }
 
-    async function deleteIconFromD1(id) {
-      if (!confirm('Are you sure you want to delete this icon?')) return;
-      await fetch(`/api/icons?id=${id}`, { method: 'DELETE' });
-      await loadIconsFromD1();
-      renderLibIcons(dbIcons);
-    }
-
     async function saveNewIconToD1() {
       const name = document.getElementById('newIconName').value.trim();
       const tags = document.getElementById('newIconTags').value.trim();
       const svg = document.getElementById('newIconSvg').value.trim();
-      if (!name || !svg) { alert('Please fill in Icon Name and SVG Code!'); return; }
+      if (!name || !svg) { showToast('Vui lòng điền Name và mã SVG!', 'warning'); return; }
+      
       await fetch('/api/icons', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, tags, svg_code: svg })
       });
+
       document.getElementById('newIconName').value = '';
       document.getElementById('newIconTags').value = '';
       document.getElementById('newIconSvg').value = '';
+      showToast('Đã lưu Icon mới vào D1 Database!', 'success');
       await loadIconsFromD1();
       switchIconTab('browse');
     }
