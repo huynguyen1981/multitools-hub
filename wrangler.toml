@@ -1,0 +1,7 @@
+name = "studio-hub"
+pages_build_output_dir = "./public"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "studio-hub-db"
+database_id = "2e42be62-7f53-498f-accb-835f87d7c164"
