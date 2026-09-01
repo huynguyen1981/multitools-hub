@@ -6,7 +6,7 @@
   <title>Developer Studio Hub</title>
 
   <!-- FAVICON DATA URI -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236161ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 2 7 12 12 22 7 12 2'/><polyline points='2 17 12 22 22 17'/><polyline points='2 12 17 22 12'/></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236161ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 2 7 12 12 22 7 12 2'/><polyline points='2 17 12 22 22 17'/><polyline points='2 12 12 17 22 12'/></svg>" />
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.39.0/min/vs/editor/vscode-loader.min.css" />
   <style>
@@ -37,25 +37,30 @@
       height: 100vh;
       display: flex;
       overflow: hidden;
-      position: relative;
+      user-select: none;
     }
 
-    /* ========================================================= */
-    /* 1. SIDEBAR & RESIZER                                      */
-    /* ========================================================= */
+    /* FIX CỨNG KÍCH THƯỚC ALL SVG TOÀN BỘ APP - TRÁNH OVERLOAD PHÌNH TO */
+    svg {
+      max-width: 100%;
+      max-height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* SIDEBAR & RESIZER FIX */
     .sidebar {
       width: var(--sidebar-width);
-      min-width: 60px;
-      max-width: 450px;
+      min-width: 200px;
+      max-width: 400px;
       background: var(--bg-sidebar);
       border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       padding: 16px 12px;
-      z-index: 100;
+      z-index: 10;
       flex-shrink: 0;
       position: relative;
-      transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease;
+      transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .sidebar.collapsed {
@@ -83,7 +88,7 @@
       font-weight: 700;
       font-size: 16px;
       padding: 8px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       color: #fff;
     }
 
@@ -99,6 +104,7 @@
       color: var(--accent);
       flex-shrink: 0;
     }
+    .brand-logo svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
 
     .nav-section {
       font-size: 11px;
@@ -113,57 +119,59 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 12px;
+      padding: 8px 10px;
       border-radius: 8px;
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 13.5px;
+      font-size: 13px;
       transition: all 0.15s;
       margin-bottom: 2px;
+      height: 38px;
     }
 
     .tool-item:hover, .tool-item.active { background: var(--bg-card); color: #fff; }
-    .tool-item-left { display: flex; align-items: center; gap: 12px; overflow: hidden; flex: 1; }
-    .tool-item-actions { display: flex; gap: 6px; opacity: 0; transition: opacity 0.15s; }
-    .tool-item:hover .tool-item-actions { opacity: 1; }
-    .tool-action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 12px; padding: 2px; }
-    .tool-action-btn:hover { color: #fff; }
-
-    /* QUY ĐỊNH KÍCH THƯỚC ICON CHUẨN CỐ ĐỊNH */
-    .icon-svg { 
-      width: 20px !important; 
-      height: 20px !important; 
-      min-width: 20px !important;
-      min-height: 20px !important;
-      fill: none; 
-      stroke: currentColor; 
-      stroke-width: 2; 
-      stroke-linecap: round; 
-      stroke-linejoin: round; 
-      flex-shrink: 0; 
-      display: inline-block;
-    }
+    .tool-item-left { display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1; }
     
-    .sidebar .icon-svg, .tool-item .icon-svg {
+    /* ÉP KHUÔN ICON TRONG SIDEBAR */
+    .tool-item-icon {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      min-height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tool-item-icon svg {
       width: 20px !important;
       height: 20px !important;
+      max-width: 20px !important;
+      max-height: 20px !important;
     }
+
+    .tool-item-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s; }
+    .tool-item:hover .tool-item-actions { opacity: 1; }
+    .tool-action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 12px; padding: 2px 4px; }
+    .tool-action-btn:hover { color: #fff; }
 
     .btn-action {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 10px;
+      padding: 9px;
       background: var(--accent);
       color: #fff;
       border: none;
       border-radius: 8px;
       font-weight: 600;
+      font-size: 13px;
       cursor: pointer;
       transition: background 0.2s;
-      margin-top: 8px;
+      margin-top: 6px;
     }
+    .btn-action svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
     .btn-action:hover { background: var(--accent-hover); }
     .btn-secondary { background: var(--bg-card); border: 1px solid var(--border-color); }
     .btn-secondary:hover { background: var(--bg-card-hover); }
@@ -171,49 +179,37 @@
     .btn-danger:hover { background: var(--danger-hover); }
     .btn-danger:disabled { opacity: 0.4; cursor: not-allowed; background: var(--bg-card); }
 
-    /* Overlay cho Sidebar Mobile */
-    .sidebar-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 90;
-      backdrop-filter: blur(2px);
-    }
-
-    /* ========================================================= */
-    /* 2. WORKSPACE & TOP BAR                                    */
-    /* ========================================================= */
+    /* WORKSPACE & TOP BAR */
     .main-workspace { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; min-width: 0; }
 
     .top-bar {
-      height: 56px;
+      height: 52px;
       border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 16px;
       background: var(--bg-main);
-      gap: 12px;
+      gap: 16px;
+      flex-shrink: 0;
     }
 
     .sidebar-toggle-btn {
       background: var(--bg-sidebar);
       border: 1px solid var(--border-color);
       color: var(--text-muted);
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all 0.2s;
-      flex-shrink: 0;
     }
+    .sidebar-toggle-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
     .sidebar-toggle-btn:hover { color: #fff; border-color: var(--accent); background: var(--bg-card); }
 
-    /* FLEX-GROW TỰ ĐỘNG THU CO SEARCH BOX */
     .search-box {
       display: flex;
       align-items: center;
@@ -224,12 +220,12 @@
       border-radius: 20px;
       flex: 1;
       max-width: 360px;
-      transition: max-width 0.3s ease;
     }
+    .search-box svg { width: 16px; height: 16px; stroke: var(--text-muted); fill: none; stroke-width: 2; }
     .search-box input { background: transparent; border: none; color: #fff; outline: none; font-size: 13px; width: 100%; }
 
-    /* AUTH WIDGET & DROPDOWN MOBILE */
-    .auth-widget { display: flex; align-items: center; gap: 8px; flex-shrink: 0; position: relative; }
+    /* AUTH WIDGET */
+    .auth-widget { display: flex; align-items: center; gap: 10px; }
     .btn-auth {
       display: flex;
       align-items: center;
@@ -243,67 +239,38 @@
       font-size: 12px;
       font-weight: 500;
       transition: all 0.2s;
-      white-space: nowrap;
     }
     .btn-auth:hover { background: var(--bg-card-hover); border-color: var(--accent); }
     .btn-passkey { background: var(--accent); border-color: var(--accent); }
     .btn-passkey:hover { background: var(--accent-hover); }
     
-    .user-profile { display: flex; align-items: center; gap: 8px; }
-    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; color: #fff; flex-shrink: 0; }
+    .user-profile { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; color: #fff; }
     .user-info { display: flex; flex-direction: column; }
     .user-name { font-size: 12px; font-weight: 600; color: #fff; }
     .role-badge { font-size: 10px; color: #4ade80; font-weight: 600; }
     .btn-logout { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; font-size: 14px; }
     .btn-logout:hover { color: #ff5555; }
 
-    /* MENU DROPDOWN MOBILE */
-    .mobile-menu-btn {
-      display: none;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      color: #fff;
-      padding: 6px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .mobile-dropdown {
-      display: none;
-      position: absolute;
-      top: 48px;
-      right: 0;
-      background: var(--bg-sidebar);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 8px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-      z-index: 100;
-      flex-direction: column;
-      gap: 6px;
-      min-width: 160px;
-    }
-    .mobile-dropdown.show { display: flex; }
-
-    /* ========================================================= */
-    /* 3. TAB BAR & LAUNCHPAD                                    */
-    /* ========================================================= */
+    /* TAB BAR & STYLING NỔI BẬT CÓ MÀU ĐỊNH DANH CÁCH XA NHAU */
     .tab-bar { 
-      height: 40px; 
-      background: var(--bg-sidebar); 
+      height: 42px; 
+      background: #0d0e1a; 
       display: flex; 
       align-items: flex-end; 
-      padding-left: 12px; 
+      padding-left: 10px; 
       border-bottom: 1px solid var(--border-color);
       overflow-x: auto;
-      white-space: nowrap;
+      flex-shrink: 0;
     }
+
     .tab { 
-      height: 34px; 
-      padding: 0 12px; 
-      background: rgba(255, 255, 255, 0.03); 
+      height: 36px; 
+      padding: 0 14px; 
+      background: #181b34; 
       color: var(--text-muted); 
       border-radius: 8px 8px 0 0; 
-      display: inline-flex; 
+      display: flex; 
       align-items: center; 
       gap: 8px; 
       font-size: 12.5px; 
@@ -312,43 +279,103 @@
       border: 1px solid var(--border-color); 
       border-bottom: none;
       position: relative;
-      transition: all 0.2s;
-      flex-shrink: 0;
+      transition: all 0.2s ease;
     }
+
+    /* Đường màu định danh nổi bật phía trên Tab */
     .tab::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 3px;
       border-radius: 8px 8px 0 0;
       background: var(--tab-color, var(--accent));
-      opacity: 0.6;
+      opacity: 0.7;
+      transition: all 0.2s;
     }
+
+    .tab:hover {
+      background: var(--bg-card);
+      color: #fff;
+    }
+
     .tab.active { 
       background: var(--bg-main); 
       color: #fff; 
       border-color: var(--border-color); 
       font-weight: 600; 
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
     }
-    .tab.active::before { opacity: 1; height: 3.5px; }
-    .tab .icon-svg { width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; color: var(--tab-color, #fff); }
-    .tab-close { 
-      width: 16px; height: 16px; 
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; opacity: 0.6; transition: all 0.15s;
-    }
-    .tab-close:hover { opacity: 1; background: rgba(255, 255, 255, 0.15); color: #ff5555; }
 
-    .viewport { flex: 1; position: relative; }
+    .tab.active::before {
+      opacity: 1;
+      height: 4px;
+      box-shadow: 0 0 8px var(--tab-color);
+    }
+
+    /* ÉP KHUÔN ICON TRÊN TAB */
+    .tab-icon {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      min-height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--tab-color, #fff);
+    }
+    .tab-icon svg {
+      width: 16px !important;
+      height: 16px !important;
+      max-width: 16px !important;
+      max-height: 16px !important;
+    }
+
+    .tab-close { 
+      width: 16px; 
+      height: 16px; 
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      opacity: 0.6; 
+      transition: all 0.15s;
+      margin-left: 2px;
+    }
+    .tab-close:hover { opacity: 1; background: rgba(255, 255, 255, 0.2); color: #ff5555; }
+
+    .viewport { flex: 1; position: relative; background: var(--bg-main); }
     .tab-frame { width: 100%; height: 100%; border: none; position: absolute; inset: 0; display: none; }
     .tab-frame.active { display: block; }
 
-    .launchpad { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; padding: 20px; overflow-y: auto; height: 100%; }
-    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; aspect-ratio: 1 / 1; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative; }
+    /* LAUNCHPAD CARD ICON FIX */
+    .launchpad { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; padding: 24px; overflow-y: auto; height: 100%; }
+    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; aspect-ratio: 1 / 1; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative; }
     .card:hover { background: var(--bg-card-hover); transform: translateY(-3px); border-color: var(--accent); }
-    .card-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.05); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: var(--accent); }
-    .card-icon .icon-svg { width: 26px !important; height: 26px !important; }
+    
+    .card-icon { 
+      width: 48px; 
+      height: 48px; 
+      background: rgba(255,255,255,0.05); 
+      border-radius: 12px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin-bottom: 12px; 
+      color: var(--accent); 
+      flex-shrink: 0;
+    }
+    .card-icon svg { 
+      width: 28px !important; 
+      height: 28px !important; 
+      max-width: 28px !important;
+      max-height: 28px !important;
+    }
+
     .card-title { font-size: 13.5px; font-weight: 700; color: #fff; margin-bottom: 4px; }
     .card-desc { font-size: 11px; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     
@@ -357,54 +384,52 @@
     .card-action-btn { background: rgba(0,0,0,0.5); border: none; color: var(--text-muted); width: 24px; height: 24px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; }
     .card-action-btn:hover { background: var(--accent); color: #fff; }
 
-    /* ========================================================= */
-    /* 4. MODALS & BOTTOM SHEET (MOBILE TỐI ƯU GIAO DIỆN)       */
-    /* ========================================================= */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center; }
-    .modal.active { display: flex; }
-    .modal-content { background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; max-width: 95vw; }
+    /* MODALS */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); z-index: 1000; }
+    .modal.active { display: flex; align-items: center; justify-content: center; }
+    .modal-content { background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
     
-    .editor-container { width: 90vw; height: 85vh; }
+    .editor-container { width: 85vw; height: 85vh; }
     .editor-header { padding: 12px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-    .editor-body { flex: 1; display: flex; overflow: hidden; }
-    .editor-meta { width: 300px; padding: 16px; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex-shrink: 0; }
+    .editor-body { flex: 1; display: flex; }
+    .editor-meta { width: 320px; padding: 20px; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
     .form-input { background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; color: #fff; outline: none; font-size: 13px; }
 
-    .icon-picker-header { display: flex; gap: 6px; margin-bottom: 4px; }
+    .icon-picker-header { display: flex; gap: 6px; margin-bottom: 6px; }
     .icon-picker-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
+      gap: 8px;
       background: var(--bg-main);
-      padding: 8px;
+      padding: 10px;
       border-radius: 8px;
       border: 1px solid var(--border-color);
-      max-height: 120px;
+      max-height: 140px;
       overflow-y: auto;
     }
     .icon-picker-item {
       display: flex; align-items: center; justify-content: center;
-      padding: 6px; border-radius: 6px; cursor: pointer; color: var(--text-muted);
-      border: 1px solid transparent;
+      padding: 8px; border-radius: 6px; cursor: pointer; color: var(--text-muted);
+      border: 1px solid transparent; width: 36px; height: 36px;
     }
     .icon-picker-item:hover, .icon-picker-item.selected { background: var(--bg-card); color: var(--accent); border-color: var(--accent); }
-    .icon-picker-item .icon-svg { width: 20px !important; height: 20px !important; }
+    .icon-picker-item svg { width: 20px !important; height: 20px !important; }
 
     .lib-icon-card {
       background: var(--bg-main);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 10px 6px;
+      padding: 12px 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       position: relative;
       transition: all 0.2s;
     }
     .lib-icon-card:hover { border-color: var(--accent); background: var(--bg-card); }
-    .lib-icon-card .icon-svg { width: 22px !important; height: 22px !important; color: var(--accent); }
-    .lib-icon-name { font-size: 10.5px; color: var(--text-muted); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+    .lib-icon-card svg { width: 24px !important; height: 24px !important; color: var(--accent); }
+    .lib-icon-name { font-size: 11px; color: var(--text-muted); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
 
     .lib-icon-del {
       position: absolute; top: 4px; right: 4px;
@@ -415,31 +440,31 @@
     }
     .lib-icon-card:hover .lib-icon-del { display: flex; }
 
-    /* TOAST NOTIFICATIONS */
+    /* TOAST */
     #toastContainer {
       position: fixed;
-      top: 16px;
-      right: 16px;
+      top: 20px;
+      right: 20px;
       z-index: 2000;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       pointer-events: none;
     }
     .toast {
       pointer-events: auto;
-      min-width: 240px;
-      padding: 10px 14px;
+      min-width: 250px;
+      padding: 12px 16px;
       border-radius: 10px;
       background: var(--bg-sidebar);
       border: 1px solid var(--border-color);
       color: #fff;
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 500;
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       transform: translateX(120%);
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -448,45 +473,9 @@
     .toast.error { border-color: var(--danger); }
     .toast.warning { border-color: #faad14; }
 
-    /* ========================================================= */
-    /* 5. RESPONSIVE BREAKPOINTS (MOBILE & TABLET TỐI ƯU RÕ RÀNG) */
-    /* ========================================================= */
-    @media (max-width: 768px) {
-      /* Sidebar dạng Overlay trên Mobile */
-      .sidebar {
-        position: fixed;
-        top: 0; left: 0; bottom: 0;
-        z-index: 150;
-        transform: translateX(0);
-        margin-left: 0 !important;
-        width: 260px !important;
-      }
-      .sidebar.collapsed {
-        transform: translateX(-100%);
-      }
-      .sidebar-resizer { display: none; }
-      .sidebar-backdrop.show { display: block; }
-
-      /* Top Bar */
-      .top-bar { padding: 0 10px; }
-      .search-box { max-width: none; }
-      .btn-auth span { display: none; } /* Chuyển nút Auth thành icon trên mobile */
-
-      /* Launchpad Grid gọn hơn */
-      .launchpad {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 12px;
-        padding: 12px;
-      }
-
-      /* Editor Modal chuyển dạng Fullscreen Mobile */
-      .editor-container { width: 100vw; height: 100vh; border-radius: 0; }
-      .editor-body { flex-direction: column; }
-      .editor-meta { width: 100%; height: 40%; border-right: none; border-bottom: 1px solid var(--border-color); }
-
-      /* Modal Confirm & Icon Manager chuyển dạng Bottom Sheet trên Mobile */
-      .modal { align-items: flex-end; }
-      .modal-content { width: 100% !important; max-width: 100% !important; border-radius: 20px 20px 0 0 !important; }
+    @media (max-width: 640px) {
+      .user-info { display: none; }
+      .search-box { max-width: 100%; }
     }
   </style>
 </head>
@@ -495,17 +484,13 @@
   <!-- TOAST CONTAINER -->
   <div id="toastContainer"></div>
 
-  <!-- SIDEBAR OVERLAY BACKDROP MOBILE -->
-  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
-
   <!-- SIDEBAR -->
-  <aside class="sidebar collapsed" id="appSidebar">
-    <!-- Resizer Handle -->
+  <aside class="sidebar" id="appSidebar">
     <div class="sidebar-resizer" id="sidebarResizer"></div>
 
     <div class="brand">
       <div class="brand-logo">
-        <svg class="icon-svg" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 17 22 12"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
       </div>
       Studio Hub
     </div>
@@ -513,15 +498,15 @@
     <div class="nav-section">Tool Workspace</div>
     <div id="sidebarList" style="flex: 1; overflow-y: auto;"></div>
 
-    <!-- ADMIN EXCLUSIVE BUTTONS -->
+    <!-- ADMIN ACTION BUTTONS -->
     <div id="adminActionButtons" style="display: none; flex-direction: column; gap: 4px;">
       <button class="btn-action btn-secondary" onclick="openIconManager()">
-        <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Icon Library
       </button>
 
       <button class="btn-action" onclick="openEditor()">
-        <svg class="icon-svg" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Create New Tool
       </button>
     </div>
@@ -530,16 +515,15 @@
   <!-- WORKSPACE -->
   <main class="main-workspace">
     <div class="top-bar">
-      <button class="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
-        <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <button class="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar (Ctrl+B)">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
 
       <div class="search-box">
-        <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" placeholder="Search tools..." oninput="filterTools()" />
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search workspace tools..." oninput="filterTools()" />
       </div>
 
-      <!-- GOOGLE & PASSKEY AUTH AREA -->
       <div class="auth-widget" id="authWidget"></div>
     </div>
 
@@ -550,19 +534,19 @@
     </div>
   </main>
 
-  <!-- CONFIRM DELETE DANGER MODAL -->
+  <!-- CONFIRM DELETE MODAL -->
   <div class="modal" id="confirmDeleteModal">
-    <div class="modal-content" style="width: 380px; padding: 20px; border: 1px solid var(--danger);">
+    <div class="modal-content" style="width: 380px; padding: 24px; border: 1px solid var(--danger);">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; color:var(--danger);">
-        <svg class="icon-svg" style="width:26px; height:26px;" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        <h3 style="margin:0; font-size:15px;">XÁC NHẬN XÓA DỮ LIỆU</h3>
+        <svg style="width:28px; height:28px; fill:none; stroke:currentColor; stroke-width:2;" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <h3 style="margin:0; font-size:16px;">XÁC NHẬN XÓA DỮ LIỆU</h3>
       </div>
-      <p id="deleteModalMsg" style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;"></p>
-      <p style="font-size: 11.5px; font-weight: 600; color: #fff; margin-bottom: 8px;">Nhập chữ <span style="color:var(--danger)">OKIE</span> để tiếp tục:</p>
-      <input type="text" id="deleteConfirmInput" class="form-input" placeholder="Gõ OKIE..." style="margin-bottom: 14px; text-transform: uppercase;" oninput="validateDeleteInput()" />
+      <p id="deleteModalMsg" style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;"></p>
+      <p style="font-size: 12px; font-weight: 600; color: #fff; margin-bottom: 8px;">Nhập chữ <span style="color:var(--danger)">OKIE</span> để tiếp tục:</p>
+      <input type="text" id="deleteConfirmInput" class="form-input" placeholder="Gõ OKIE..." style="margin-bottom: 16px; text-transform: uppercase;" oninput="validateDeleteInput()" />
       <div style="display: flex; justify-content: flex-end; gap: 8px;">
-        <button class="btn-action btn-secondary" onclick="closeDeleteModal()" style="margin:0; padding:8px 12px; font-size:12px;">Hủy bỏ</button>
-        <button id="btnConfirmDeleteExecute" class="btn-action btn-danger" disabled onclick="executeDeleteAction()" style="margin:0; padding:8px 12px; font-size:12px;">Xóa Vĩnh Viễn</button>
+        <button class="btn-action btn-secondary" onclick="closeDeleteModal()" style="margin:0; padding:8px 14px; font-size:12px;">Hủy bỏ</button>
+        <button id="btnConfirmDeleteExecute" class="btn-action btn-danger" disabled onclick="executeDeleteAction()" style="margin:0; padding:8px 14px; font-size:12px;">Xóa Vĩnh Viễn</button>
       </div>
     </div>
   </div>
@@ -570,7 +554,7 @@
   <!-- PASSKEY MODAL -->
   <div class="modal" id="passkeyModal">
     <div class="modal-content" style="width: 320px; padding: 20px;">
-      <h3 style="margin-bottom: 8px; font-size:15px;">Admin Passkey</h3>
+      <h3 style="margin-bottom: 8px;">Admin Passkey</h3>
       <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Nhập passcode admin để bật quyền quản trị:</p>
       <input type="password" id="passkeyInput" class="form-input" placeholder="Enter passkey..." style="margin-bottom: 14px;" />
       <div style="display: flex; justify-content: flex-end; gap: 8px;">
@@ -584,8 +568,8 @@
   <div class="modal" id="editorModal">
     <div class="modal-content editor-container">
       <div class="editor-header">
-        <h3 id="editorTitle" style="font-size:15px;">Tool Code Studio</h3>
-        <button onclick="closeEditor()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:16px;">✕</button>
+        <h3 id="editorTitle">Tool Code Studio</h3>
+        <button onclick="closeEditor()" style="background:none; border:none; color:#fff; cursor:pointer;">✕ Close</button>
       </div>
       <div class="editor-body">
         <div class="editor-meta">
@@ -598,12 +582,12 @@
 
           <label style="font-size: 11px; color: var(--text-muted)">SELECT ICON FROM D1 DATABASE</label>
           <div class="icon-picker-header">
-            <input type="text" id="iconSearchInput" class="form-input" style="flex:1" placeholder="🔍 Search tags..." oninput="filterIconsInPicker()" />
+            <input type="text" id="iconSearchInput" class="form-input" style="flex:1" placeholder="🔍 Search icon tags..." oninput="filterIconsInPicker()" />
           </div>
           <div class="icon-picker-grid" id="iconPickerGrid"></div>
 
           <label style="font-size: 11px; color: var(--text-muted)">SVG CODE (AUTO-FILLED)</label>
-          <textarea id="editIconSvg" class="form-input" rows="2" readonly placeholder="SVG string..."></textarea>
+          <textarea id="editIconSvg" class="form-input" rows="3" readonly placeholder="SVG string..."></textarea>
 
           <button class="btn-action" style="margin-top: auto" onclick="saveToolToD1()">Save to D1 Database</button>
         </div>
@@ -614,31 +598,33 @@
 
   <!-- ICON MANAGER MODAL -->
   <div class="modal" id="iconManagerModal">
-    <div class="modal-content" style="width: 600px; max-height: 80vh; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+    <div class="modal-content" style="width: 640px; max-height: 80vh; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+      
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <h3 style="margin:0; font-size:15px;">Icon Library</h3>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <h3 style="margin:0;">Icon Library</h3>
           <span id="iconCountBadge" style="background:var(--accent); font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600;">0 icons</span>
         </div>
         <button onclick="closeIconManager()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:16px;">✕</button>
       </div>
 
-      <div style="display:flex; gap:8px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">
+      <div style="display:flex; gap:10px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">
         <button id="tabBtnBrowse" class="btn-action btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="switchIconTab('browse')">Browse Library</button>
         <button id="tabBtnAdd" class="btn-action btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="switchIconTab('add')">+ Add New Icon</button>
       </div>
 
-      <div id="iconViewBrowse" style="display:flex; flex-direction:column; gap:10px; flex:1; overflow:hidden;">
+      <div id="iconViewBrowse" style="display:flex; flex-direction:column; gap:12px; flex:1; overflow:hidden;">
         <input type="text" id="libSearchInput" class="form-input" placeholder="🔍 Search icons by name or tag..." oninput="filterLibIcons()" />
-        <div id="libIconGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap:10px; overflow-y:auto; padding-right:4px; max-height:340px;"></div>
+        <div id="libIconGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap:12px; overflow-y:auto; padding-right:4px; max-height:360px;"></div>
       </div>
 
-      <div id="iconViewAdd" style="display:none; flex-direction:column; gap:10px;">
+      <div id="iconViewAdd" style="display:none; flex-direction:column; gap:12px;">
         <input type="text" id="newIconName" class="form-input" placeholder="Icon Name (e.g. Terminal)" />
         <input type="text" id="newIconTags" class="form-input" placeholder="Search Tags (e.g. dev, code, cli)" />
-        <textarea id="newIconSvg" class="form-input" rows="4" placeholder="Paste <svg>...</svg> code here..."></textarea>
+        <textarea id="newIconSvg" class="form-input" rows="5" placeholder="Paste <svg>...</svg> code here..."></textarea>
         <button class="btn-action" onclick="saveNewIconToD1()">Save Icon to D1 Database</button>
       </div>
+
     </div>
   </div>
 
@@ -652,18 +638,29 @@
     let monacoEditorInstance = null;
     let pendingDeleteAction = null;
 
-    const toolColorMap = {};
+    // BẢNG MÀU ĐỊNH DANH TƯƠNG PHẢN NỔI BẬT NỐI TIẾP
+    const VIBRANT_PALETTE = [
+      "#38ef7d", // Green Emerald (Excel Booster)
+      "#ff4b1f", // Coral Red/Orange (PCN Matrix)
+      "#00c6ff", // Bright Cyan
+      "#ff007f", // Neon Pink
+      "#f8002f", // Crimson
+      "#7f00ff", // Deep Purple
+      "#ffb347", // Pastel Orange
+      "#00f2fe", // Electric Blue
+      "#f12711"  // Sunset Red
+    ];
 
+    const toolColorMap = {};
+    let colorIndex = 0;
+
+    // HÀM GÁN MÀU CÁCH XA NHAU NỔI BẬT
     function getToolColor(toolId) {
       if (toolColorMap[toolId]) return toolColorMap[toolId];
-      let hash = 0;
-      for (let i = 0; i < toolId.length; i++) {
-        hash = toolId.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      const h = Math.abs(hash) % 360;
-      const color = `hsl(${h}, 80%, 60%)`;
-      toolColorMap[toolId] = color;
-      return color;
+      const assignedColor = VIBRANT_PALETTE[colorIndex % VIBRANT_PALETTE.length];
+      colorIndex++;
+      toolColorMap[toolId] = assignedColor;
+      return assignedColor;
     }
 
     // --- TOAST NOTIFICATION SYSTEM ---
@@ -671,8 +668,8 @@
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
-      
       const iconMap = { success: '✅', error: '❌', warning: '⚠️' };
+
       toast.innerHTML = `<span>${iconMap[type] || 'ℹ️'}</span><span>${message}</span>`;
       container.appendChild(toast);
 
@@ -683,14 +680,9 @@
       }, 3000);
     }
 
-    // --- SIDEBAR RESIZE & TOGGLE (RESPONSIVE SUPPORT) ---
+    // --- SIDEBAR RESIZE & TOGGLE (THIẾT LẬP LẠI MƯỢT MÀ KHÔNG DÍNH CHUỘT) ---
     function toggleSidebar() {
-      const sidebar = document.getElementById('appSidebar');
-      const backdrop = document.getElementById('sidebarBackdrop');
-      sidebar.classList.toggle('collapsed');
-      if (window.innerWidth <= 768) {
-        backdrop.classList.toggle('show', !sidebar.classList.contains('collapsed'));
-      }
+      document.getElementById('appSidebar').classList.toggle('collapsed');
     }
 
     const sidebar = document.getElementById('appSidebar');
@@ -699,22 +691,24 @@
 
     resizer.addEventListener('mousedown', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       isResizing = true;
       resizer.classList.add('is-resizing');
       document.body.style.cursor = 'col-resize';
       document.body.style.userSelect = 'none';
     });
 
-    window.addEventListener('mousemove', (e) => {
+    document.addEventListener('mousemove', (e) => {
       if (!isResizing) return;
+      e.preventDefault();
       let newWidth = e.clientX;
-      if (newWidth < 60) newWidth = 60;
-      if (newWidth > 450) newWidth = 450;
+      if (newWidth < 200) newWidth = 200;
+      if (newWidth > 400) newWidth = 400;
       sidebar.style.width = newWidth + 'px';
       document.documentElement.style.setProperty('--sidebar-width', newWidth + 'px');
     });
 
-    window.addEventListener('mouseup', () => {
+    document.addEventListener('mouseup', () => {
       if (isResizing) {
         isResizing = false;
         resizer.classList.remove('is-resizing');
@@ -750,8 +744,7 @@
         adminActions.style.display = 'none';
         widget.innerHTML = `
           <button class="btn-auth btn-passkey" onclick="openPasskeyModal()">
-            <svg class="icon-svg" style="width:14px!important;height:14px!important;" viewBox="0 0 24 24"><path d="M21 2l-2 2m-2-2l2 2m7 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>Passkey</span>
+            <span>🔑 Passkey Admin</span>
           </button>
           <button class="btn-auth" onclick="showToast('Tính năng OAuth Gmail đang chờ cấu hình Client ID', 'warning')">
             <svg style="width:13px; height:13px;" viewBox="0 0 24 24">
@@ -772,7 +765,9 @@
       document.getElementById('passkeyModal').classList.add('active');
     }
 
-    function closePasskeyModal() { document.getElementById('passkeyModal').classList.remove('active'); }
+    function closePasskeyModal() {
+      document.getElementById('passkeyModal').classList.remove('active');
+    }
 
     function submitPasskey() {
       const input = document.getElementById('passkeyInput').value.trim();
@@ -794,7 +789,7 @@
       showToast('Đã đăng xuất khỏi quyền Admin', 'warning');
     }
 
-    // --- MONACO EDITOR INIT ---
+    // --- MONACO EDITOR ---
     require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.39.0/min/vs' }});
     require(['vs/editor/editor.main'], function() {
       monacoEditorInstance = monaco.editor.create(document.getElementById('monacoHost'), {
@@ -828,9 +823,9 @@
       }
     }
 
-    // --- RENDER UI ---
+    // --- RENDER UI (BỌC KHUÔN CỐ ĐỊNH ICON THÀNH CÔNG) ---
     function renderUI() {
-      const defaultSvg = `<svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>`;
+      const defaultSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>`;
       const isAdmin = currentUser.role === 'admin';
 
       // Launchpad Cards
@@ -848,11 +843,11 @@
         </div>
       `).join('');
 
-      // Sidebar List
+      // Sidebar List (Bọc class .tool-item-icon)
       document.getElementById('sidebarList').innerHTML = tools.map(tool => `
         <div class="tool-item" onclick="runTool('${tool.id}')">
           <div class="tool-item-left">
-            ${tool.icon_svg || defaultSvg}
+            <div class="tool-item-icon">${tool.icon_svg || defaultSvg}</div>
             <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${tool.title}</span>
           </div>
           ${isAdmin ? `
@@ -877,35 +872,45 @@
       });
     }
 
-    // RUN TOOL & TAB MANAGEMENT
+    // RUN TOOL: TỰ ĐỘNG TRÍCH XUẤT TITLE VÀ ICON HIỂN THỊ LÊN TAB
     async function runTool(id) {
-      if (window.innerWidth <= 768) {
-        document.getElementById('appSidebar').classList.add('collapsed');
-        document.getElementById('sidebarBackdrop').classList.remove('show');
-      }
-
       let tool = tools.find(t => t.id === id);
       if (!tool.code_content) {
         const res = await fetch(`/api/tools?id=${id}`);
         tool = await res.json();
       }
+
+      // TRÍCH XUẤT ICON VÀ TITLE CHUẨN TỪ HTML NẾU CÓ
+      let iconSvg = tool.icon_svg || `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>`;
+      let toolTitle = tool.title || "Tool Workspace";
+
       const blobUrl = URL.createObjectURL(new Blob([tool.code_content], { type: 'text/html' }));
       const tabId = 'tab_' + id + '_' + Date.now();
       const tabColor = getToolColor(id);
       
       const newTabObj = { 
-        tabId, toolId: id, title: tool.title, 
-        iconSvg: tool.icon_svg || `<svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>`,
-        color: tabColor, blobUrl 
+        tabId, 
+        toolId: id, 
+        title: toolTitle, 
+        iconSvg: iconSvg,
+        color: tabColor,
+        blobUrl 
       };
 
+      // Xếp Tab kế bên cùng loại nếu đã mở
       let lastSameIndex = -1;
       for (let i = openTabs.length - 1; i >= 0; i--) {
-        if (openTabs[i].toolId === id) { lastSameIndex = i; break; }
+        if (openTabs[i].toolId === id) {
+          lastSameIndex = i;
+          break;
+        }
       }
 
-      if (lastSameIndex !== -1) openTabs.splice(lastSameIndex + 1, 0, newTabObj);
-      else openTabs.push(newTabObj);
+      if (lastSameIndex !== -1) {
+        openTabs.splice(lastSameIndex + 1, 0, newTabObj);
+      } else {
+        openTabs.push(newTabObj);
+      }
 
       const iframe = document.createElement('iframe');
       iframe.id = 'frame_' + tabId;
@@ -928,8 +933,8 @@
         <div class="tab ${tab.tabId === activeTabId ? 'active' : ''}" 
              style="--tab-color: ${tab.color};" 
              onclick="switchTab('${tab.tabId}')">
-          ${tab.iconSvg}
-          <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:120px;">${tab.title}</span>
+          <div class="tab-icon">${tab.iconSvg}</div>
+          <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:140px;">${tab.title}</span>
           <span class="tab-close" onclick="closeTab(event, '${tab.tabId}')">✕</span>
         </div>
       `).join('');
@@ -943,11 +948,11 @@
       else { document.getElementById('launchpad').style.display = 'grid'; renderTabs(); }
     }
 
-    // --- CONFIRM DELETE MODAL ---
+    // --- DELETE MODAL ---
     function triggerDeleteTool(id, title) {
       if (currentUser.role !== 'admin') { showToast('Bạn không có quyền Admin!', 'error'); return; }
       pendingDeleteAction = { type: 'tool', id };
-      document.getElementById('deleteModalMsg').innerText = `Hành động này sẽ xóa vĩnh viễn Tool "${title}" khỏi D1 Database.`;
+      document.getElementById('deleteModalMsg').innerText = `Hành động này sẽ xóa vĩnh viễn Tool "${title}" khỏi D1 Database và không thể phục hồi.`;
       openDeleteModal();
     }
 
@@ -991,7 +996,7 @@
       closeDeleteModal();
     }
 
-    // --- CRUD ACTIONS ---
+    // --- EDITOR ACTIONS ---
     function openEditor() {
       if (currentUser.role !== 'admin') { showToast('Access Denied!', 'error'); return; }
       document.getElementById('editToolId').value = '';
