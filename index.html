@@ -39,10 +39,10 @@
       overflow: hidden;
     }
 
-    /* SIDEBAR & RESIZER (RESPONSIVE & RESIZABLE) */
+    /* SIDEBAR & FIX RESIZER */
     .sidebar {
       width: var(--sidebar-width);
-      min-width: 180px;
+      min-width: 60px;
       max-width: 450px;
       background: var(--bg-sidebar);
       border-right: 1px solid var(--border-color);
@@ -59,15 +59,15 @@
       margin-left: calc(var(--sidebar-width) * -1);
     }
 
-    /* Resizer Line */
+    /* Resizer Line Fix */
     .sidebar-resizer {
       position: absolute;
       top: 0;
-      right: -3px;
-      width: 6px;
+      right: -4px;
+      width: 8px;
       height: 100%;
       cursor: col-resize;
-      z-index: 15;
+      z-index: 50;
       transition: background 0.2s;
     }
     .sidebar-resizer:hover, .sidebar-resizer.is-resizing {
@@ -127,7 +127,25 @@
     .tool-action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 12px; padding: 2px; }
     .tool-action-btn:hover { color: #fff; }
 
-    .icon-svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    /* QUY ĐỊNH KÍCH THƯỚC ICON CHUẨN CỐ ĐỊNH */
+    .icon-svg { 
+      width: 20px !important; 
+      height: 20px !important; 
+      min-width: 20px !important;
+      min-height: 20px !important;
+      fill: none; 
+      stroke: currentColor; 
+      stroke-width: 2; 
+      stroke-linecap: round; 
+      stroke-linejoin: round; 
+      flex-shrink: 0; 
+      display: inline-block;
+    }
+    
+    .sidebar .icon-svg, .tool-item .icon-svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
 
     .btn-action {
       display: flex;
@@ -221,11 +239,73 @@
     .btn-logout { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; font-size: 14px; }
     .btn-logout:hover { color: #ff5555; }
 
-    /* TAB & VIEWPORT */
-    .tab-bar { height: 40px; background: var(--bg-sidebar); display: flex; align-items: flex-end; padding-left: 12px; border-bottom: 1px solid var(--border-color); }
-    .tab { height: 34px; padding: 0 12px; background: transparent; color: var(--text-muted); border-radius: 6px 6px 0 0; display: flex; align-items: center; gap: 8px; font-size: 12.5px; cursor: pointer; margin-right: 4px; border: 1px solid transparent; border-bottom: none; }
-    .tab.active { background: var(--bg-main); color: #fff; border-color: var(--border-color); font-weight: 600; }
-    .tab-close { width: 14px; height: 14px; opacity: 0.6; }
+    /* TAB BAR & TAB STYLING CÓ ICON VÀ MÀU ĐỊNH DANH */
+    .tab-bar { 
+      height: 40px; 
+      background: var(--bg-sidebar); 
+      display: flex; 
+      align-items: flex-end; 
+      padding-left: 12px; 
+      border-bottom: 1px solid var(--border-color);
+      overflow-x: auto;
+    }
+    .tab { 
+      height: 34px; 
+      padding: 0 12px; 
+      background: rgba(255, 255, 255, 0.03); 
+      color: var(--text-muted); 
+      border-radius: 8px 8px 0 0; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      font-size: 12.5px; 
+      cursor: pointer; 
+      margin-right: 4px; 
+      border: 1px solid var(--border-color); 
+      border-bottom: none;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 8px 8px 0 0;
+      background: var(--tab-color, var(--accent));
+      opacity: 0.6;
+    }
+    .tab.active { 
+      background: var(--bg-main); 
+      color: #fff; 
+      border-color: var(--border-color); 
+      font-weight: 600; 
+    }
+    .tab.active::before {
+      opacity: 1;
+      height: 3.5px;
+    }
+    .tab .icon-svg {
+      width: 16px !important;
+      height: 16px !important;
+      min-width: 16px !important;
+      min-height: 16px !important;
+      color: var(--tab-color, #fff);
+    }
+    .tab-close { 
+      width: 16px; 
+      height: 16px; 
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      opacity: 0.6; 
+      transition: all 0.15s;
+    }
+    .tab-close:hover { opacity: 1; background: rgba(255, 255, 255, 0.15); color: #ff5555; }
 
     .viewport { flex: 1; position: relative; }
     .tab-frame { width: 100%; height: 100%; border: none; position: absolute; inset: 0; display: none; }
@@ -236,7 +316,7 @@
     .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; aspect-ratio: 1 / 1; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative; }
     .card:hover { background: var(--bg-card-hover); transform: translateY(-4px); border-color: var(--accent); }
     .card-icon { width: 52px; height: 52px; background: rgba(255,255,255,0.05); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; color: var(--accent); }
-    .card-icon .icon-svg { width: 28px; height: 28px; }
+    .card-icon .icon-svg { width: 28px !important; height: 28px !important; }
     .card-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; }
     .card-desc { font-size: 11.5px; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     
@@ -274,6 +354,7 @@
       border: 1px solid transparent;
     }
     .icon-picker-item:hover, .icon-picker-item.selected { background: var(--bg-card); color: var(--accent); border-color: var(--accent); }
+    .icon-picker-item .icon-svg { width: 22px !important; height: 22px !important; }
 
     .lib-icon-card {
       background: var(--bg-main);
@@ -288,7 +369,7 @@
       transition: all 0.2s;
     }
     .lib-icon-card:hover { border-color: var(--accent); background: var(--bg-card); }
-    .lib-icon-card .icon-svg { width: 24px; height: 24px; color: var(--accent); }
+    .lib-icon-card .icon-svg { width: 24px !important; height: 24px !important; color: var(--accent); }
     .lib-icon-name { font-size: 11px; color: var(--text-muted); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
 
     .lib-icon-del {
@@ -346,7 +427,7 @@
 
   <!-- SIDEBAR -->
   <aside class="sidebar" id="appSidebar">
-    <!-- ResizerHandle -->
+    <!-- Resizer Handle -->
     <div class="sidebar-resizer" id="sidebarResizer"></div>
 
     <div class="brand">
@@ -500,6 +581,22 @@
     let monacoEditorInstance = null;
     let pendingDeleteAction = null;
 
+    // Map lưu trữ màu cố định ngẫu nhiên theo toolId
+    const toolColorMap = {};
+
+    function getToolColor(toolId) {
+      if (toolColorMap[toolId]) return toolColorMap[toolId];
+      // Generate màu HSL ngẫu nhiên nhưng nổi bật (saturation 70-90%, lightness 55-65%)
+      let hash = 0;
+      for (let i = 0; i < toolId.length; i++) {
+        hash = toolId.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const h = Math.abs(hash) % 360;
+      const color = `hsl(${h}, 80%, 60%)`;
+      toolColorMap[toolId] = color;
+      return color;
+    }
+
     // --- TOAST NOTIFICATION SYSTEM ---
     function showToast(message, type = 'success') {
       const container = document.getElementById('toastContainer');
@@ -522,7 +619,7 @@
       }, 3000);
     }
 
-    // --- SIDEBAR RESIZE & TOGGLE ---
+    // --- SIDEBAR RESIZE & TOGGLE (FIX ĐƠ THÀNH CÔNG) ---
     function toggleSidebar() {
       document.getElementById('appSidebar').classList.toggle('collapsed');
     }
@@ -532,22 +629,23 @@
     let isResizing = false;
 
     resizer.addEventListener('mousedown', (e) => {
+      e.preventDefault();
       isResizing = true;
       resizer.classList.add('is-resizing');
       document.body.style.cursor = 'col-resize';
       document.body.style.userSelect = 'none';
     });
 
-    document.addEventListener('mousemove', (e) => {
+    window.addEventListener('mousemove', (e) => {
       if (!isResizing) return;
       let newWidth = e.clientX;
-      if (newWidth < 180) newWidth = 180;
+      if (newWidth < 60) newWidth = 60;
       if (newWidth > 450) newWidth = 450;
       sidebar.style.width = newWidth + 'px';
       document.documentElement.style.setProperty('--sidebar-width', newWidth + 'px');
     });
 
-    document.addEventListener('mouseup', () => {
+    window.addEventListener('mouseup', () => {
       if (isResizing) {
         isResizing = false;
         resizer.classList.remove('is-resizing');
@@ -711,6 +809,7 @@
       });
     }
 
+    // RUN TOOL: CHÈN TAB CÙNG LOẠI ĐỨNG CẠNH NHAU & MÀU ĐỊNH DANH
     async function runTool(id) {
       let tool = tools.find(t => t.id === id);
       if (!tool.code_content) {
@@ -719,7 +818,31 @@
       }
       const blobUrl = URL.createObjectURL(new Blob([tool.code_content], { type: 'text/html' }));
       const tabId = 'tab_' + id + '_' + Date.now();
-      openTabs.push({ tabId, toolId: id, title: tool.title, blobUrl });
+      const tabColor = getToolColor(id);
+      
+      const newTabObj = { 
+        tabId, 
+        toolId: id, 
+        title: tool.title, 
+        iconSvg: tool.icon_svg || `<svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>`,
+        color: tabColor,
+        blobUrl 
+      };
+
+      // TÌM VỊ TRÍ CHÈN KẾ BÊN TAB CÙNG LOẠI
+      let lastSameIndex = -1;
+      for (let i = openTabs.length - 1; i >= 0; i--) {
+        if (openTabs[i].toolId === id) {
+          lastSameIndex = i;
+          break;
+        }
+      }
+
+      if (lastSameIndex !== -1) {
+        openTabs.splice(lastSameIndex + 1, 0, newTabObj);
+      } else {
+        openTabs.push(newTabObj);
+      }
 
       const iframe = document.createElement('iframe');
       iframe.id = 'frame_' + tabId;
@@ -739,8 +862,11 @@
 
     function renderTabs() {
       document.getElementById('tabBar').innerHTML = openTabs.map(tab => `
-        <div class="tab ${tab.tabId === activeTabId ? 'active' : ''}" onclick="switchTab('${tab.tabId}')">
-          <span>${tab.title}</span>
+        <div class="tab ${tab.tabId === activeTabId ? 'active' : ''}" 
+             style="--tab-color: ${tab.color};" 
+             onclick="switchTab('${tab.tabId}')">
+          ${tab.iconSvg}
+          <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:140px;">${tab.title}</span>
           <span class="tab-close" onclick="closeTab(event, '${tab.tabId}')">✕</span>
         </div>
       `).join('');
@@ -754,7 +880,7 @@
       else { document.getElementById('launchpad').style.display = 'grid'; renderTabs(); }
     }
 
-    // --- STRONG CONFIRM DELETE MODAL ---
+    // --- CONFIRM DELETE MODAL ---
     function triggerDeleteTool(id, title) {
       if (currentUser.role !== 'admin') { showToast('Bạn không có quyền Admin!', 'error'); return; }
       pendingDeleteAction = { type: 'tool', id };
