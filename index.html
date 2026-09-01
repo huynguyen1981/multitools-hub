@@ -718,28 +718,31 @@
       }, 3000);
     }
 
-    // SIDEBAR RESIZE & TOGGLE (FIX DÍNH KHI MỞ TAB/IFRAME)
+   // SIDEBAR RESIZE & TOGGLE (FIX DÍNH KHI MỞ TAB/IFRAME & HẾT LỖI RE-DECLARATION)
     function toggleSidebar() {
       document.getElementById('appSidebar').classList.toggle('collapsed');
     }
     
-    const sidebar = document.getElementById('appSidebar');
-    const resizer = document.getElementById('sidebarResizer');
+    // Gán trực tiếp vào biến đã khai báo hoặc lấy DOM thẳng
+    const appSidebarEl = document.getElementById('appSidebar');
+    const resizerEl = document.getElementById('sidebarResizer');
     let isResizing = false;
     
-    resizer.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      isResizing = true;
-      resizer.classList.add('is-resizing');
-      document.body.style.cursor = 'col-resize';
-      document.body.style.userSelect = 'none';
+    if (resizerEl) {
+      resizerEl.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        isResizing = true;
+        resizerEl.classList.add('is-resizing');
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
     
-      // FIX TRIỆT ĐỂ: Tắt pointer-events của tất cả iframe khi bắt đầu kéo resizer
-      document.querySelectorAll('iframe').forEach(iframe => {
-        iframe.style.pointerEvents = 'none';
+        // FIX DÍNH IFRAME: Tắt pointer-events của tất cả iframe khi bắt đầu kéo
+        document.querySelectorAll('iframe').forEach(iframe => {
+          iframe.style.pointerEvents = 'none';
+        });
       });
-    });
+    }
     
     document.addEventListener('mousemove', (e) => {
       if (!isResizing) return;
@@ -749,18 +752,20 @@
       if (newWidth < 200) newWidth = 200;
       if (newWidth > 400) newWidth = 400;
       
-      sidebar.style.width = newWidth + 'px';
+      if (appSidebarEl) {
+        appSidebarEl.style.width = newWidth + 'px';
+      }
       document.documentElement.style.setProperty('--sidebar-width', newWidth + 'px');
     });
     
     document.addEventListener('mouseup', () => {
       if (isResizing) {
         isResizing = false;
-        resizer.classList.remove('is-resizing');
+        if (resizerEl) resizerEl.classList.remove('is-resizing');
         document.body.style.cursor = '';
         document.body.style.userSelect = '';
     
-        // Bật lại pointer-events cho iframe để thao tác bình thường
+        // Bật lại pointer-events cho iframe khi nhả chuột
         document.querySelectorAll('iframe').forEach(iframe => {
           iframe.style.pointerEvents = 'auto';
         });
