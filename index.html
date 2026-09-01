@@ -353,8 +353,30 @@
     .tab-frame.active { display: block; }
 
     /* LAUNCHPAD CARD ICON FIX */
-    .launchpad { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; padding: 24px; overflow-y: auto; height: 100%; }
-    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; aspect-ratio: 1 / 1; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative; }
+    .launchpad { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+      gap: 16px; 
+      padding: 24px; 
+      overflow-y: auto; 
+      height: 100%; 
+    }
+    
+    .card { 
+      background: var(--bg-card); 
+      border: 1px solid var(--border-color); 
+      border-radius: 14px; 
+      aspect-ratio: 1 / 1; 
+      padding: 16px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      text-align: center; 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+      position: relative; 
+    }
     .card:hover { background: var(--bg-card-hover); transform: translateY(-3px); border-color: var(--accent); }
     
     .card-icon { 
@@ -476,6 +498,42 @@
     @media (max-width: 640px) {
       .user-info { display: none; }
       .search-box { max-width: 100%; }
+    }
+    /* ==========================================
+   RESPONSIVE MOBILE OPTIMIZATION FOR CARDS
+   ========================================== */
+    @media (max-width: 640px) {
+      .launchpad {
+        /* Chuyển sang 2 cột đều nhau hoặc 1 cột dạng danh sách trên mobile */
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 10px;
+        padding: 12px;
+      }
+    
+      .card {
+        aspect-ratio: auto; /* Bỏ vuông cứng để không chiếm quá nhiều chiều cao */
+        padding: 12px 8px;
+        min-height: 110px;
+      }
+    
+      .card-icon {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 6px;
+      }
+    
+      .card-icon svg {
+        width: 20px !important;
+        height: 20px !important;
+      }
+    
+      .card-title {
+        font-size: 12px;
+      }
+    
+      .card-desc {
+        display: none; /* Ẩn mô tả dài trên mobile để UI gọn gàng */
+      }
     }
   </style>
 </head>
