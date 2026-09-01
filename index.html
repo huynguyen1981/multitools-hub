@@ -688,17 +688,16 @@
     let monacoEditorInstance = null;
     let pendingDeleteAction = null;
 
-    // ALGORITHM: TỰ ĐỘNG BĂM TÊN TOOL SANG GÓC MÀU HSL NEON ĐỘC BẢN
-    function getToolTheme(title = '') {
-      let hash = 0;
-      for (let i = 0; i < title.length; i++) {
-        hash = title.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      const hue = Math.abs(hash) % 360;
+   // THUẬT TOÁN RẢI MÀU GOLDEN RATIO - KHÔNG BẠO LỰC TRÙNG MÀU
+    function getToolTheme(index = 0) {
+      // Dùng Golden Ratio Conjugate để phân bổ góc màu (Hue) xa nhau nhất có thể
+      const GOLDEN_RATIO = 0.618033988749895;
+      const hue = Math.floor(((index * GOLDEN_RATIO) % 1) * 360);
+      
       return {
-        color: `hsl(${hue}, 85%, 60%)`,
-        bg: `hsla(${hue}, 85%, 60%, 0.15)`,
-        glow: `hsla(${hue}, 85%, 60%, 0.4)`
+        color: `hsl(${hue}, 90%, 65%)`,
+        bg: `hsla(${hue}, 90%, 65%, 0.15)`,
+        glow: `hsla(${hue}, 90%, 65%, 0.4)`
       };
     }
 
@@ -862,16 +861,16 @@
       }
     }
 
-    // RENDER UI: GÁN MÀU DYNAMIC DỰA TRÊN COLOR HASHING
+    // RENDER UI MỚI (TRUYỀN INDEX VÀO TÍNH MÀU DYNAMIC)
     function renderUI() {
       const defaultSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>`;
       const isAdmin = currentUser.role === 'admin';
-
+    
       // Launchpad Cards
-      document.getElementById('launchpad').innerHTML = tools.map(tool => {
-        const theme = getToolTheme(tool.title);
+      document.getElementById('launchpad').innerHTML = tools.map((tool, index) => {
+        const theme = getToolTheme(index); // Tính màu theo thứ tự card
         return `
-          <div class="card" onclick="runTool('${tool.id}')" 
+          <div class="card" onclick="runTool('${tool.id}', ${index})" 
                style="--accent-color: ${theme.color}; --accent-bg: ${theme.bg}; --accent-glow: ${theme.glow};">
             ${isAdmin ? `
               <div class="card-actions">
@@ -887,10 +886,10 @@
       }).join('');
 
       // Sidebar List
-      document.getElementById('sidebarList').innerHTML = tools.map(tool => {
-        const theme = getToolTheme(tool.title);
+      document.getElementById('sidebarList').innerHTML = tools.map((tool, index) => {
+        const theme = getToolTheme(index);
         return `
-          <div class="tool-item" onclick="runTool('${tool.id}')">
+          <div class="tool-item" onclick="runTool('${tool.id}', ${index})">
             <div class="tool-item-left">
               <div class="tool-item-icon" style="--tool-color: ${theme.color}">${tool.icon_svg || defaultSvg}</div>
               <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${tool.title}</span>
@@ -918,18 +917,18 @@
       });
     }
 
-    // RUN TOOL: TAB SẼ NHẬN MÀU THEO COLOR HASHING CỦA TOOL
-    async function runTool(id) {
+    // CẬP NHẬT HÀM RUNTOOL ĐỂ TRUYỀN THÊM INDEX TẠO MÀU TAB
+    async function runTool(id, index = 0) {
       let tool = tools.find(t => t.id === id);
       if (!tool.code_content) {
         const res = await fetch(`/api/tools?id=${id}`);
         tool = await res.json();
       }
-
+    
       let iconSvg = tool.icon_svg || `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>`;
       let toolTitle = tool.title || "Tool Workspace";
-
-      const theme = getToolTheme(toolTitle);
+    
+      const theme = getToolTheme(index);
       const blobUrl = URL.createObjectURL(new Blob([tool.code_content], { type: 'text/html' }));
       const tabId = 'tab_' + id + '_' + Date.now();
       
@@ -941,7 +940,7 @@
         color: theme.color,
         blobUrl 
       };
-
+    
       let lastSameIndex = -1;
       for (let i = openTabs.length - 1; i >= 0; i--) {
         if (openTabs[i].toolId === id) {
@@ -949,13 +948,13 @@
           break;
         }
       }
-
+    
       if (lastSameIndex !== -1) {
         openTabs.splice(lastSameIndex + 1, 0, newTabObj);
       } else {
         openTabs.push(newTabObj);
       }
-
+    
       const iframe = document.createElement('iframe');
       iframe.id = 'frame_' + tabId;
       iframe.className = 'tab-frame';
