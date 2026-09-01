@@ -880,7 +880,10 @@
     require(['vs/editor/editor.main'], function() {
       monacoEditorInstance = monaco.editor.create(document.getElementById('monacoHost'), {
         value: '<!-- Write HTML/JS code here -->',
-        language: 'html', theme: 'vs-dark', automaticLayout: true
+        language: 'html', theme: 'vs-dark', formatOnPaste: true,   // Tự format khi dán code
+        formatOnType: true,    // Tự format khi gõ dấu chấm phẩy / đóng ngoặc
+        tabSize: 2,            // 2 spaces chuẩn UI gọn gàng
+        automaticLayout: true  // Auto resize theo container
       });
     });
 
