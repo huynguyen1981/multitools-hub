@@ -1,5 +1,5 @@
 name = "studio-hub"
-pages_build_output_dir = "./public"
+pages_build_output_dir = "."
 
 [[d1_databases]]
 binding = "DB"
